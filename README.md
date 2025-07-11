@@ -1,2 +1,2 @@
 # TodoApp
-AI TDD DDD driven aplication
+AI TDD DDD driven application
