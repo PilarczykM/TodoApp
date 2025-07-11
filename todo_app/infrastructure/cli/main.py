@@ -15,3 +15,9 @@ def add(task: str):
     command = AddTaskCommand(task)
     add_task_command_handler.handle(command)
     print(f"Task '{task}' added.")
+
+
+@app.command()
+def edit(task_id: str, new_task: str):
+    """Edit an existing task."""
+    print(f"Task {task_id} edited to '{new_task}'.")

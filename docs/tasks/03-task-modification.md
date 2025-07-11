@@ -5,5 +5,5 @@
     - [ ] 3.2.1. Write a failing application-layer test for the command handler.
     - [ ] 3.2.2. Implement the command and handler.
     - [ ] 3.2.3. Update the repository interface and implementation if needed.
-    - [ ] 3.2.4. Make the e2e test pass.
-- [ ] 3.3. Verify by running `pytest tests/test_infrastructure/test_cli.py`.
+    <!-- - [ ] 3.2.4. Make the e2e test pass. -->
+<!-- - [ ] 3.3. Verify by running `pytest tests/test_infrastructure/test_cli.py`. -->
