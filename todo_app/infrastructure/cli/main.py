@@ -42,3 +42,9 @@ def complete(task_id: str):
     command = CompleteTaskCommand(task_id)
     complete_task_command_handler.handle(command)
     print(f"Task {task_id} marked as completed.")
+
+
+@app.command()
+def list():
+    """List all tasks."""
+    print("Listing tasks...")
