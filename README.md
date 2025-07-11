@@ -55,10 +55,3 @@ Here are some examples of how to use TodoApp:
     python src/main.py complete <task-id>
     ```
 
-## Roadmap
-
-| Version | Scope                          | Target Date |
-| ------- | ------------------------------ | ----------- |
-| **2.3** | Persistence adapter for SQLite | Aug 2025    |
-| **2.4** | Tagging & search               | Nov 2025    |
-| **2.5** | Cross-platform packaging       | Jan 2026    |
