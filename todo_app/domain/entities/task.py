@@ -1,6 +1,7 @@
 import uuid
-from dataclasses import dataclass, field
 from enum import Enum
+
+from pydantic import BaseModel, Field
 
 from todo_app.domain.value_objects.task_id import TaskId
 
@@ -12,11 +13,10 @@ class TaskStatus(Enum):
     COMPLETED = "completed"
 
 
-@dataclass
-class Task:
+class Task(BaseModel):
     """Represents a task in the TodoApp."""
 
     title: str
     description: str
     status: TaskStatus = TaskStatus.PENDING
-    id: TaskId = field(default_factory=lambda: TaskId(uuid.uuid4()))
+    id: TaskId = Field(default_factory=lambda: TaskId(uuid.uuid4()))

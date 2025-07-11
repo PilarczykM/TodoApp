@@ -20,13 +20,15 @@ from todo_app.application.queries import (
     ShowTaskQueryHandler,
 )
 from todo_app.domain.entities.task import TaskStatus
-from todo_app.infrastructure.persistence.in_memory import InMemoryTaskRepository
+from pathlib import Path
+
+from todo_app.infrastructure.persistence.json_repository import JsonTaskRepository
 
 console = Console()
 
 app = typer.Typer()
 
-task_repository = InMemoryTaskRepository()
+task_repository = JsonTaskRepository(Path("tasks.json"))
 add_task_command_handler = AddTaskCommandHandler(task_repository)
 edit_task_command_handler = EditTaskCommandHandler(task_repository)
 remove_task_command_handler = RemoveTaskCommandHandler(task_repository)
