@@ -2,11 +2,25 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from todo_app.application.commands import AddTaskCommand, AddTaskCommandHandler, EditTaskCommand, EditTaskCommandHandler, RemoveTaskCommand, RemoveTaskCommandHandler, CompleteTaskCommand, CompleteTaskCommandHandler
-from todo_app.application.queries import ListTasksQuery, ListTasksQueryHandler, ShowTaskQuery, ShowTaskQueryHandler
-from todo_app.infrastructure.persistence.in_memory import InMemoryTaskRepository
-from todo_app.domain.entities.task import TaskStatus
+from todo_app.application.commands import (
+    AddTaskCommand,
+    AddTaskCommandHandler,
+    CompleteTaskCommand,
+    CompleteTaskCommandHandler,
+    EditTaskCommand,
+    EditTaskCommandHandler,
+    RemoveTaskCommand,
+    RemoveTaskCommandHandler,
+)
 from todo_app.application.exceptions import TaskNotFoundError
+from todo_app.application.queries import (
+    ListTasksQuery,
+    ListTasksQueryHandler,
+    ShowTaskQuery,
+    ShowTaskQueryHandler,
+)
+from todo_app.domain.entities.task import TaskStatus
+from todo_app.infrastructure.persistence.in_memory import InMemoryTaskRepository
 
 console = Console()
 
@@ -26,7 +40,9 @@ def add(task: str):
     """Add a new task."""
     command = AddTaskCommand(task)
     add_task_command_handler.handle(command)
-    console.print(f"[green]Task '{task}' added with ID: {command.task_id.value}.[/green]")
+    console.print(
+        f"[green]Task '{task}' added with ID: {command.task_id.value}.[/green]"
+    )
 
 
 @app.command()
@@ -63,7 +79,11 @@ def complete(task_id: str):
 
 
 @app.command()
-def list(status: TaskStatus = typer.Option(None, "--status", "-s", help="Filter tasks by status (pending or completed).")):
+def list(
+    status: TaskStatus = typer.Option(
+        None, "--status", "-s", help="Filter tasks by status (pending or completed)."
+    ),
+):
     """List all tasks."""
     query = ListTasksQuery(status=status)
     tasks = list_tasks_query_handler.handle(query)
@@ -75,10 +95,15 @@ def list(status: TaskStatus = typer.Option(None, "--status", "-s", help="Filter 
 
         for task in tasks:
             status_color = "green" if task.status == TaskStatus.COMPLETED else "yellow"
-            table.add_row(str(task.id.value), task.title, f"[{status_color}]{task.status.value.upper()}[/{status_color}]")
+            table.add_row(
+                str(task.id.value),
+                task.title,
+                f"[{status_color}]{task.status.value.upper()}[/{status_color}]",
+            )
         console.print(table)
     else:
         console.print("[yellow]No tasks found.[/yellow]")
+
 
 @app.command()
 def show(task_id: str):
@@ -87,16 +112,18 @@ def show(task_id: str):
         query = ShowTaskQuery(task_id)
         task = show_task_query_handler.handle(query)
         if task:
-            console.print(f"[bold blue]Task Details:[/bold blue]")
+            console.print(
+                "[bold blue]Task Details:[/bold blue]"
+            )
             console.print(f"  [cyan]ID:[/cyan] {task.id.value}")
             console.print(f"  [magenta]Title:[/magenta] {task.title}")
             console.print(f"  [yellow]Description:[/yellow] {task.description}")
             status_color = "green" if task.status == TaskStatus.COMPLETED else "yellow"
-            console.print(f"  [green]Status:[/green] [{status_color}]{task.status.value.upper()}[/{status_color}]")
+            console.print(
+                f"  [green]Status:[/green] "
+                f"[{status_color}]{task.status.value.upper()}[/{status_color}]"
+            )
         else:
             console.print(f"[red]Task with ID {task_id} not found.[/red]")
     except TaskNotFoundError as e:
         console.print(f"[red]Error: {e}[/red]")
-
-
-

@@ -1,8 +1,8 @@
 import uuid
 
+from todo_app.application.exceptions import TaskNotFoundError
 from todo_app.domain.entities.task import Task
 from todo_app.domain.value_objects.task_id import TaskId
-from todo_app.application.exceptions import TaskNotFoundError
 
 
 class InMemoryTaskRepository:

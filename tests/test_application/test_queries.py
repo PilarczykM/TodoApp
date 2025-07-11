@@ -36,8 +36,18 @@ class MockTaskRepository:
 
 def test_list_tasks_query_handler_returns_all_tasks():
     repository = MockTaskRepository()
-    task1 = Task(id=repository.get_next_id(), title="Task 1", description="Desc 1", status=TaskStatus.PENDING)
-    task2 = Task(id=repository.get_next_id(), title="Task 2", description="Desc 2", status=TaskStatus.COMPLETED)
+    task1 = Task(
+        id=repository.get_next_id(),
+        title="Task 1",
+        description="Desc 1",
+        status=TaskStatus.PENDING,
+    )
+    task2 = Task(
+        id=repository.get_next_id(),
+        title="Task 2",
+        description="Desc 2",
+        status=TaskStatus.COMPLETED,
+    )
     repository.add(task1)
     repository.add(task2)
 
@@ -49,10 +59,21 @@ def test_list_tasks_query_handler_returns_all_tasks():
     assert task1 in tasks
     assert task2 in tasks
 
+
 def test_list_tasks_query_handler_returns_completed_tasks():
     repository = MockTaskRepository()
-    task1 = Task(id=repository.get_next_id(), title="Task 1", description="Desc 1", status=TaskStatus.PENDING)
-    task2 = Task(id=repository.get_next_id(), title="Task 2", description="Desc 2", status=TaskStatus.COMPLETED)
+    task1 = Task(
+        id=repository.get_next_id(),
+        title="Task 1",
+        description="Desc 1",
+        status=TaskStatus.PENDING,
+    )
+    task2 = Task(
+        id=repository.get_next_id(),
+        title="Task 2",
+        description="Desc 2",
+        status=TaskStatus.COMPLETED,
+    )
     repository.add(task1)
     repository.add(task2)
 
@@ -64,13 +85,20 @@ def test_list_tasks_query_handler_returns_completed_tasks():
     assert task2 in tasks
     assert task1 not in tasks
 
+
 def test_show_task_query_handler_returns_task_by_id():
     repository = MockTaskRepository()
     task_id = repository.get_next_id()
-    task_to_show = Task(id=task_id, title="Task to show", description="Description", status=TaskStatus.PENDING)
+    task_to_show = Task(
+        id=task_id,
+        title="Task to show",
+        description="Description",
+        status=TaskStatus.PENDING,
+    )
     repository.add(task_to_show)
 
     from todo_app.application.queries.queries import ShowTaskQuery, ShowTaskQueryHandler
+
     handler = ShowTaskQueryHandler(repository)
     query = ShowTaskQuery(task_id.value)
     task = handler.handle(query)

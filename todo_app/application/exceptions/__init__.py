@@ -3,6 +3,7 @@ from todo_app.domain.exceptions import DomainError
 
 class ApplicationError(DomainError):
     """Base class for application-specific errors."""
+
     pass
 
 

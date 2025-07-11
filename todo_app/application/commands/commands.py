@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 
+from todo_app.application.exceptions import TaskNotFoundError
 from todo_app.domain.entities.task import Task, TaskStatus
 from todo_app.domain.value_objects.task_id import TaskId
-from todo_app.application.exceptions import TaskNotFoundError
 
 
 @dataclass(frozen=True)
@@ -24,7 +24,7 @@ class AddTaskCommandHandler:
         task_id = self.task_repository.get_next_id()
         task = Task(title=command.title, description="", id=task_id)
         self.task_repository.add(task)
-        object.__setattr__(command, 'task_id', task_id)
+        object.__setattr__(command, "task_id", task_id)
 
 
 @dataclass(frozen=True)
