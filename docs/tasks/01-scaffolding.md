@@ -6,4 +6,4 @@
 - [x] 1.4. Implement the `Task` entity in `src/todo_app/domain/entities.py` to make the test pass.
 - [x] 1.5. Write failing tests for `TaskId` and other value objects.
 - [x] 1.6. Implement the value objects in `src/todo_app/domain/value_objects.py`.
-- [ ] 1.7. Verify by running `pytest tests/test_domain/`.
+- [x] 1.7. Verify by running `pytest tests/test_domain/`.
