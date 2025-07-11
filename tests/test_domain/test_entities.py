@@ -1,8 +1,8 @@
-
-import pytest
 from todo_app.domain.entities import Task, TaskStatus
 
+
 def test_task_creation():
+    """Test that a Task can be created with a title, description, and default status."""
     # Given
     title = "Buy milk"
     description = "Remember to buy milk"
