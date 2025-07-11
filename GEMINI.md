@@ -17,8 +17,8 @@ Follow this sequence for every sub-task:
 2.  **Write Failing Test**: Create a new test file or add a new test case that specifically validates the requirement of the sub-task. The test should fail with a clear and expected error.
 3.  **Run Test to Confirm Failure**: Execute `pytest path/to/your/test.py` and ensure it fails as anticipated.
 4.  **Implement Minimal Code**: Write the absolute minimum amount of code required to make the failing test pass. This may involve creating or modifying classes and functions in `src/todo_app`.
-5.  **Run Test to Confirm Pass**: Execute `pytest` again to ensure the test now passes.
-6.  **Run Quality Checks**: Run `ruff check .` and `ruff format .` to lint and format the new code. Fix any issues that are reported.
+5.  **Run Test to Confirm Pass**: Execute `uv run pytest` again to ensure the test now passes.
+6.  **Run Quality Checks**: Run `uv run ruff check .` and `uv run ruff format .` to lint and format the new code. Fix any issues that are reported.
 7.  **Commit Changes**: Once all checks pass, stage and commit the changes.
     -   `git add .`
     -   `git commit -m "..."` (See commit message style below)
@@ -26,13 +26,13 @@ Follow this sequence for every sub-task:
 
 ## Tooling & Commands
 
--   **Run All Tests**: `pytest`
--   **Run Specific Tests**: `pytest tests/path/to/test_file.py`
--   **Run Tests with Coverage**: `pytest --cov=src/todo_app tests/`
--   **Lint and Type-Check**: `ruff check .`
--   **Format Code**: `ruff format .`
--   **Install Dependency**: `uv pip install <package_name>`
--   **Sync Dependencies**: `uv pip sync pyproject.toml`
+-   **Run All Tests**: `uv run pytest`
+-   **Run Specific Tests**: `uv run pytest tests/path/to/test_file.py`
+-   **Run Tests with Coverage**: `uv run pytest --cov=src/todo_app tests/`
+-   **Lint and Type-Check**: `uv run ruff check .`
+-   **Format Code**: `uv run ruff format .`
+-   **Install Dependency**: `uv add <package_name>`
+-   **Sync Dependencies**: `uv sync`
 
 ## Commit Message Style
 
