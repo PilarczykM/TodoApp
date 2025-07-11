@@ -19,7 +19,7 @@
 
 ## Getting Started
 
-To get started with TodoApp, you'll need to have Python 3.10+ installed.
+To get started with TodoApp, you'll need to have Python 3.10+ and `uv` installed.
 
 1.  **Clone the repository**:
     ```bash
@@ -31,11 +31,11 @@ To get started with TodoApp, you'll need to have Python 3.10+ installed.
     ```
 3.  **Install dependencies**:
     ```bash
-    pip install -r requirements.txt
+    uv sync
     ```
 4.  **Run the application**:
     ```bash
-    python src/main.py --help
+    uv run python todo_app/main.py --help
     ```
 
 ## Usage
@@ -44,14 +44,26 @@ Here are some examples of how to use TodoApp:
 
 *   **Add a new task**:
     ```bash
-    python src/main.py add "Buy milk"
+    uv run python todo_app/main.py add "Buy milk"
     ```
 *   **List all tasks**:
     ```bash
-    python src/main.py list
+    uv run python todo_app/main.py list
     ```
 *   **Complete a task**:
     ```bash
-    python src/main.py complete <task-id>
+    uv run python todo_app/main.py complete <task-id>
+    ```
+*   **Edit a task**:
+    ```bash
+    uv run python todo_app/main.py edit <task-id> "New title"
+    ```
+*   **Remove a task**:
+    ```bash
+    uv run python todo_app/main.py remove <task-id>
+    ```
+*   **Show task details**:
+    ```bash
+    uv run python todo_app/main.py show <task-id>
     ```
 
