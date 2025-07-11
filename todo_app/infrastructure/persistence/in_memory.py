@@ -36,3 +36,7 @@ class InMemoryTaskRepository:
     def get_next_id(self) -> TaskId:
         """Generate a new unique TaskId."""
         return TaskId(str(uuid.uuid4()))
+
+    def get_all(self) -> list[Task]:
+        """Retrieve all tasks."""
+        return list(self._tasks.values())

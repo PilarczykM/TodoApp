@@ -63,3 +63,18 @@ def test_list_tasks_query_handler_returns_completed_tasks():
     assert len(tasks) == 1
     assert task2 in tasks
     assert task1 not in tasks
+
+def test_show_task_query_handler_returns_task_by_id():
+    repository = MockTaskRepository()
+    task_id = repository.get_next_id()
+    task_to_show = Task(id=task_id, title="Task to show", description="Description", status=TaskStatus.PENDING)
+    repository.add(task_to_show)
+
+    from todo_app.application.queries.queries import ShowTaskQuery, ShowTaskQueryHandler
+    handler = ShowTaskQueryHandler(repository)
+    query = ShowTaskQuery(task_id.value)
+    task = handler.handle(query)
+
+    assert task is not None
+    assert task.id == task_to_show.id
+    assert task.title == task_to_show.title
