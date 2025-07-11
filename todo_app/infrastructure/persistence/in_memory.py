@@ -15,9 +15,16 @@ class InMemoryTaskRepository:
         """Add a task to the repository."""
         self._tasks[task.id] = task
 
-    def get(self, task_id: TaskId) -> Task:
+    def get_by_id(self, task_id: TaskId) -> Task | None:
         """Retrieve a task by its ID."""
         return self._tasks.get(task_id)
+
+    def update(self, task: Task):
+        """Update an existing task."""
+        if task.id in self._tasks:
+            self._tasks[task.id] = task
+        else:
+            raise ValueError(f"Task with ID {task.id.value} not found.")
 
     def get_next_id(self) -> TaskId:
         """Generate a new unique TaskId."""

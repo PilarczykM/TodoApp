@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from todo_app.domain.entities.task import Task
 from todo_app.domain.value_objects.task_id import TaskId
@@ -9,6 +9,7 @@ class AddTaskCommand:
     """Command to add a new task."""
 
     title: str
+    task_id: TaskId = field(init=False)
 
 
 class AddTaskCommandHandler:
@@ -22,6 +23,7 @@ class AddTaskCommandHandler:
         task_id = self.task_repository.get_next_id()
         task = Task(title=command.title, description="", id=task_id)
         self.task_repository.add(task)
+        object.__setattr__(command, 'task_id', task_id)
 
 
 @dataclass(frozen=True)

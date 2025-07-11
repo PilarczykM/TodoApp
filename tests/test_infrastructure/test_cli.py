@@ -7,12 +7,19 @@ runner = CliRunner()
 def test_add_task():
     result = runner.invoke(app, ["add", "Test Task"])
     assert result.exit_code == 0
-    assert "Task 'Test Task' added." in result.stdout
+    assert "Task 'Test Task' added with ID:" in result.stdout
 
 def test_edit_task_e2e_failing():
-    # Add a task first
-    runner.invoke(app, ["add", "Task to edit"])
+    # Add a task first and capture its ID
+    add_result = runner.invoke(app, ["add", "Task to edit"])
+    assert add_result.exit_code == 0
+    import re
+    match = re.search(r"Task 'Task to edit' added with ID: ([0-9a-fA-F-]{36})", add_result.stdout)
+    assert match is not None
+    task_id = match.group(1)
+    print(f"Captured Task ID: {task_id}")
+
     # Attempt to edit the task
-    result = runner.invoke(app, ["edit", "1", "Edited Task"])
-    assert result.exit_code == 0
-    assert "Task 1 edited to 'Edited Task'." in result.stdout
+    edit_result = runner.invoke(app, ["edit", task_id, "Edited Task"])
+    assert edit_result.exit_code == 0
+    assert f"Task {task_id} edited to 'Edited Task'." in edit_result.stdout
