@@ -1,7 +1,4 @@
-def main():
-    """Provide the main entry point for the TodoApp CLI."""
-    print("Hello World!")
-
+from todo_app.infrastructure.cli.main import app
 
 if __name__ == "__main__":
-    main()
+    app()
