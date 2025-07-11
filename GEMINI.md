@@ -15,7 +15,7 @@ Follow this sequence for every sub-task:
 
 1.  **Select Task**: Identify the next uncompleted sub-task from the ordered files in `docs/tasks/`.
 2.  **Write Failing Test**: Create a new test file or add a new test case that specifically validates the requirement of the sub-task. The test should fail with a clear and expected error.
-3.  **Run Test to Confirm Failure**: Execute `pytest path/to/your/test.py` and ensure it fails as anticipated.
+3.  **Run Test to Confirm Failure**: Execute `uv run pytest path/to/your/test.py` and ensure it fails as anticipated.
 4.  **Implement Minimal Code**: Write the absolute minimum amount of code required to make the failing test pass. This may involve creating or modifying classes and functions in `src/todo_app`.
 5.  **Run Test to Confirm Pass**: Execute `uv run pytest` again to ensure the test now passes.
 6.  **Run Quality Checks**: Run `uv run ruff check .` and `uv run ruff format .` to lint and format the new code. Fix any issues that are reported.
