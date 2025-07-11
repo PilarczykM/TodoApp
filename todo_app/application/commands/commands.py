@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from todo_app.domain.entities.task import Task
+from todo_app.domain.entities.task import Task, TaskStatus
 from todo_app.domain.value_objects.task_id import TaskId
 
 
@@ -68,3 +68,27 @@ class RemoveTaskCommandHandler:
         """Execute the RemoveTaskCommand."""
         task_id = TaskId(command.task_id)
         self.task_repository.remove(task_id)
+
+
+@dataclass(frozen=True)
+class CompleteTaskCommand:
+    """Command to mark a task as completed."""
+
+    task_id: str
+
+
+class CompleteTaskCommandHandler:
+    """Handles the CompleteTaskCommand."""
+
+    def __init__(self, task_repository):
+        self.task_repository = task_repository
+
+    def handle(self, command: CompleteTaskCommand):
+        """Execute the CompleteTaskCommand."""
+        task_id = TaskId(command.task_id)
+        task = self.task_repository.get_by_id(task_id)
+        if task:
+            task.status = TaskStatus.COMPLETED
+            self.task_repository.update(task)
+        else:
+            raise ValueError(f"Task with ID {command.task_id} not found.")

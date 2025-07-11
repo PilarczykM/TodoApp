@@ -78,3 +78,21 @@ def test_remove_task_command_handler_removes_task():
 
     removed_task = repository.get_by_id(task_id)
     assert removed_task is None
+
+
+def test_complete_task_command_handler_marks_task_as_completed():
+    repository = MockTaskRepository()
+    # Add a task first
+    task_id = repository.get_next_id()
+    task_to_complete = Task(id=task_id, title="Task to complete", description="Description", status=TaskStatus.PENDING)
+    repository.add(task_to_complete)
+
+    # Now try to complete it
+    from todo_app.application.commands import CompleteTaskCommand, CompleteTaskCommandHandler
+    command = CompleteTaskCommand(task_id.value)
+    handler = CompleteTaskCommandHandler(repository)
+    handler.handle(command)
+
+    completed_task = repository.get_by_id(task_id)
+    assert completed_task is not None
+    assert completed_task.status == TaskStatus.COMPLETED

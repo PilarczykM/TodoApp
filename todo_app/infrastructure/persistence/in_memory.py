@@ -26,6 +26,13 @@ class InMemoryTaskRepository:
         else:
             raise ValueError(f"Task with ID {task.id.value} not found.")
 
+    def remove(self, task_id: TaskId):
+        """Remove a task from the repository."""
+        if task_id in self._tasks:
+            del self._tasks[task_id]
+        else:
+            raise ValueError(f"Task with ID {task_id.value} not found.")
+
     def get_next_id(self) -> TaskId:
         """Generate a new unique TaskId."""
         return TaskId(str(uuid.uuid4()))

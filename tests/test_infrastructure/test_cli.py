@@ -37,3 +37,17 @@ def test_remove_task_e2e_failing():
     remove_result = runner.invoke(app, ["remove", task_id])
     assert remove_result.exit_code == 0
     assert f"Task {task_id} removed." in remove_result.stdout
+
+def test_complete_task_e2e_failing():
+    # Add a task first and capture its ID
+    add_result = runner.invoke(app, ["add", "Task to complete"])
+    assert add_result.exit_code == 0
+    import re
+    match = re.search(r"Task 'Task to complete' added with ID: ([0-9a-fA-F-]{36})", add_result.stdout)
+    assert match is not None
+    task_id = match.group(1)
+
+    # Attempt to complete the task
+    complete_result = runner.invoke(app, ["complete", task_id])
+    assert complete_result.exit_code == 0
+    assert f"Task {task_id} marked as completed." in complete_result.stdout
