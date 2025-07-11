@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import typer
 from rich.console import Console
 from rich.table import Table
@@ -20,13 +22,13 @@ from todo_app.application.queries import (
     ShowTaskQueryHandler,
 )
 from todo_app.domain.entities.task import TaskStatus
-from todo_app.infrastructure.persistence.in_memory import InMemoryTaskRepository
+from todo_app.infrastructure.persistence.json_repository import JsonTaskRepository
 
 console = Console()
 
 app = typer.Typer()
 
-task_repository = InMemoryTaskRepository()
+task_repository = JsonTaskRepository(Path("tasks.json"))
 add_task_command_handler = AddTaskCommandHandler(task_repository)
 edit_task_command_handler = EditTaskCommandHandler(task_repository)
 remove_task_command_handler = RemoveTaskCommandHandler(task_repository)
@@ -112,9 +114,7 @@ def show(task_id: str):
         query = ShowTaskQuery(task_id)
         task = show_task_query_handler.handle(query)
         if task:
-            console.print(
-                "[bold blue]Task Details:[/bold blue]"
-            )
+            console.print("[bold blue]Task Details:[/bold blue]")
             console.print(f"  [cyan]ID:[/cyan] {task.id.value}")
             console.print(f"  [magenta]Title:[/magenta] {task.title}")
             console.print(f"  [yellow]Description:[/yellow] {task.description}")
