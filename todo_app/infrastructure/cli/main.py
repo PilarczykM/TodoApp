@@ -24,3 +24,9 @@ def edit(task_id: str, new_title: str):
     command = EditTaskCommand(task_id, new_title)
     edit_task_command_handler.handle(command)
     print(f"Task {task_id} edited to '{new_title}'.")
+
+
+@app.command()
+def remove(task_id: str):
+    """Remove a task."""
+    print(f"Task {task_id} removed.")
