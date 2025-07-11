@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 
 from todo_app.domain.entities.task import Task, TaskStatus
 from todo_app.domain.value_objects.task_id import TaskId
+from todo_app.application.exceptions import TaskNotFoundError
 
 
 @dataclass(frozen=True)
@@ -48,7 +49,7 @@ class EditTaskCommandHandler:
             task.title = command.new_title
             self.task_repository.update(task)
         else:
-            raise ValueError(f"Task with ID {command.task_id} not found.")
+            raise TaskNotFoundError(command.task_id)
 
 
 @dataclass(frozen=True)
@@ -91,4 +92,4 @@ class CompleteTaskCommandHandler:
             task.status = TaskStatus.COMPLETED
             self.task_repository.update(task)
         else:
-            raise ValueError(f"Task with ID {command.task_id} not found.")
+            raise TaskNotFoundError(command.task_id)

@@ -1,8 +1,10 @@
 import uuid
+import pytest
 
 from todo_app.application.commands import AddTaskCommand, AddTaskCommandHandler
 from todo_app.domain.entities.task import Task, TaskStatus
 from todo_app.domain.value_objects.task_id import TaskId
+from todo_app.application.exceptions import TaskNotFoundError
 
 
 class MockTaskRepository:
@@ -22,13 +24,13 @@ class MockTaskRepository:
         if task.id.value in self.tasks:
             self.tasks[task.id.value] = task
         else:
-            raise ValueError(f"Task with ID {task.id.value} not found.")
+            raise TaskNotFoundError(task.id.value)
 
     def remove(self, task_id: TaskId):
         if task_id.value in self.tasks:
             del self.tasks[task_id.value]
         else:
-            raise ValueError(f"Task with ID {task_id.value} not found.")
+            raise TaskNotFoundError(task_id.value)
 
 
 def test_add_task_command_handler_adds_task_to_repository():
@@ -96,3 +98,28 @@ def test_complete_task_command_handler_marks_task_as_completed():
     completed_task = repository.get_by_id(task_id)
     assert completed_task is not None
     assert completed_task.status == TaskStatus.COMPLETED
+
+
+def test_edit_task_command_handler_raises_error_if_task_not_found():
+    repository = MockTaskRepository()
+    from todo_app.application.commands import EditTaskCommand, EditTaskCommandHandler
+    command = EditTaskCommand(str(uuid.uuid4()), "Non Existent Task")
+    handler = EditTaskCommandHandler(repository)
+    with pytest.raises(TaskNotFoundError):
+        handler.handle(command)
+
+def test_remove_task_command_handler_raises_error_if_task_not_found():
+    repository = MockTaskRepository()
+    from todo_app.application.commands import RemoveTaskCommand, RemoveTaskCommandHandler
+    command = RemoveTaskCommand(str(uuid.uuid4()))
+    handler = RemoveTaskCommandHandler(repository)
+    with pytest.raises(TaskNotFoundError):
+        handler.handle(command)
+
+def test_complete_task_command_handler_raises_error_if_task_not_found():
+    repository = MockTaskRepository()
+    from todo_app.application.commands import CompleteTaskCommand, CompleteTaskCommandHandler
+    command = CompleteTaskCommand(str(uuid.uuid4()))
+    handler = CompleteTaskCommandHandler(repository)
+    with pytest.raises(TaskNotFoundError):
+        handler.handle(command)

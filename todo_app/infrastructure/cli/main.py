@@ -27,25 +27,34 @@ def add(task: str):
 @app.command()
 def edit(task_id: str, new_title: str):
     """Edit an existing task."""
-    command = EditTaskCommand(task_id, new_title)
-    edit_task_command_handler.handle(command)
-    print(f"Task {task_id} edited to '{new_title}'.")
+    try:
+        command = EditTaskCommand(task_id, new_title)
+        edit_task_command_handler.handle(command)
+        print(f"Task {task_id} edited to '{new_title}'.")
+    except TaskNotFoundError as e:
+        print(f"Error: {e}")
 
 
 @app.command()
 def remove(task_id: str):
     """Remove a task."""
-    command = RemoveTaskCommand(task_id)
-    remove_task_command_handler.handle(command)
-    print(f"Task {task_id} removed.")
+    try:
+        command = RemoveTaskCommand(task_id)
+        remove_task_command_handler.handle(command)
+        print(f"Task {task_id} removed.")
+    except TaskNotFoundError as e:
+        print(f"Error: {e}")
 
 
 @app.command()
 def complete(task_id: str):
     """Mark a task as completed."""
-    command = CompleteTaskCommand(task_id)
-    complete_task_command_handler.handle(command)
-    print(f"Task {task_id} marked as completed.")
+    try:
+        command = CompleteTaskCommand(task_id)
+        complete_task_command_handler.handle(command)
+        print(f"Task {task_id} marked as completed.")
+    except TaskNotFoundError as e:
+        print(f"Error: {e}")
 
 
 @app.command()
@@ -62,15 +71,18 @@ def list(status: TaskStatus = typer.Option(None, "--status", "-s", help="Filter 
 @app.command()
 def show(task_id: str):
     """Show details of a single task."""
-    query = ShowTaskQuery(task_id)
-    task = show_task_query_handler.handle(query)
-    if task:
-        print(f"ID: {task.id.value}")
-        print(f"Title: {task.title}")
-        print(f"Description: {task.description}")
-        print(f"Status: {task.status.value.upper()}")
-    else:
-        print(f"Task with ID {task_id} not found.")
+    try:
+        query = ShowTaskQuery(task_id)
+        task = show_task_query_handler.handle(query)
+        if task:
+            print(f"ID: {task.id.value}")
+            print(f"Title: {task.title}")
+            print(f"Description: {task.description}")
+            print(f"Status: {task.status.value.upper()}")
+        else:
+            print(f"Task with ID {task_id} not found.")
+    except TaskNotFoundError as e:
+        print(f"Error: {e}")
 
 
 
