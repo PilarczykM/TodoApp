@@ -24,6 +24,12 @@ class MockTaskRepository:
         else:
             raise ValueError(f"Task with ID {task.id.value} not found.")
 
+    def remove(self, task_id: TaskId):
+        if task_id.value in self.tasks:
+            del self.tasks[task_id.value]
+        else:
+            raise ValueError(f"Task with ID {task_id.value} not found.")
+
 
 def test_add_task_command_handler_adds_task_to_repository():
     repository = MockTaskRepository()
@@ -55,3 +61,20 @@ def test_edit_task_command_handler_edits_task_title():
     assert edited_task is not None
     assert edited_task.title == "Edited Task"
     assert edited_task.status == TaskStatus.PENDING
+
+
+def test_remove_task_command_handler_removes_task():
+    repository = MockTaskRepository()
+    # Add a task first
+    task_id = repository.get_next_id()
+    task_to_remove = Task(id=task_id, title="Task to remove", description="Description", status=TaskStatus.PENDING)
+    repository.add(task_to_remove)
+
+    # Now try to remove it
+    from todo_app.application.commands import RemoveTaskCommand, RemoveTaskCommandHandler
+    command = RemoveTaskCommand(task_id.value)
+    handler = RemoveTaskCommandHandler(repository)
+    handler.handle(command)
+
+    removed_task = repository.get_by_id(task_id)
+    assert removed_task is None
