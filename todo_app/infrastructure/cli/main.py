@@ -1,9 +1,14 @@
 import typer
+from rich.console import Console
+from rich.table import Table
 
 from todo_app.application.commands import AddTaskCommand, AddTaskCommandHandler, EditTaskCommand, EditTaskCommandHandler, RemoveTaskCommand, RemoveTaskCommandHandler, CompleteTaskCommand, CompleteTaskCommandHandler
 from todo_app.application.queries import ListTasksQuery, ListTasksQueryHandler, ShowTaskQuery, ShowTaskQueryHandler
 from todo_app.infrastructure.persistence.in_memory import InMemoryTaskRepository
 from todo_app.domain.entities.task import TaskStatus
+from todo_app.application.exceptions import TaskNotFoundError
+
+console = Console()
 
 app = typer.Typer()
 
@@ -21,7 +26,7 @@ def add(task: str):
     """Add a new task."""
     command = AddTaskCommand(task)
     add_task_command_handler.handle(command)
-    print(f"Task '{task}' added with ID: {command.task_id.value}.")
+    console.print(f"[green]Task '{task}' added with ID: {command.task_id.value}.[/green]")
 
 
 @app.command()
@@ -30,9 +35,9 @@ def edit(task_id: str, new_title: str):
     try:
         command = EditTaskCommand(task_id, new_title)
         edit_task_command_handler.handle(command)
-        print(f"Task {task_id} edited to '{new_title}'.")
+        console.print(f"[green]Task {task_id} edited to '{new_title}'.[/green]")
     except TaskNotFoundError as e:
-        print(f"Error: {e}")
+        console.print(f"[red]Error: {e}[/red]")
 
 
 @app.command()
@@ -41,9 +46,9 @@ def remove(task_id: str):
     try:
         command = RemoveTaskCommand(task_id)
         remove_task_command_handler.handle(command)
-        print(f"Task {task_id} removed.")
+        console.print(f"[green]Task {task_id} removed.[/green]")
     except TaskNotFoundError as e:
-        print(f"Error: {e}")
+        console.print(f"[red]Error: {e}[/red]")
 
 
 @app.command()
@@ -52,9 +57,9 @@ def complete(task_id: str):
     try:
         command = CompleteTaskCommand(task_id)
         complete_task_command_handler.handle(command)
-        print(f"Task {task_id} marked as completed.")
+        console.print(f"[green]Task {task_id} marked as completed.[/green]")
     except TaskNotFoundError as e:
-        print(f"Error: {e}")
+        console.print(f"[red]Error: {e}[/red]")
 
 
 @app.command()
@@ -63,10 +68,17 @@ def list(status: TaskStatus = typer.Option(None, "--status", "-s", help="Filter 
     query = ListTasksQuery(status=status)
     tasks = list_tasks_query_handler.handle(query)
     if tasks:
+        table = Table(title="[bold blue]Your Tasks[/bold blue]")
+        table.add_column("ID", style="cyan", no_wrap=True)
+        table.add_column("Title", style="magenta")
+        table.add_column("Status", style="green")
+
         for task in tasks:
-            print(f"ID: {task.id.value} | Title: {task.title} | Status: {task.status.value.upper()}")
+            status_color = "green" if task.status == TaskStatus.COMPLETED else "yellow"
+            table.add_row(str(task.id.value), task.title, f"[{status_color}]{task.status.value.upper()}[/{status_color}]")
+        console.print(table)
     else:
-        print("No tasks found.")
+        console.print("[yellow]No tasks found.[/yellow]")
 
 @app.command()
 def show(task_id: str):
@@ -75,14 +87,16 @@ def show(task_id: str):
         query = ShowTaskQuery(task_id)
         task = show_task_query_handler.handle(query)
         if task:
-            print(f"ID: {task.id.value}")
-            print(f"Title: {task.title}")
-            print(f"Description: {task.description}")
-            print(f"Status: {task.status.value.upper()}")
+            console.print(f"[bold blue]Task Details:[/bold blue]")
+            console.print(f"  [cyan]ID:[/cyan] {task.id.value}")
+            console.print(f"  [magenta]Title:[/magenta] {task.title}")
+            console.print(f"  [yellow]Description:[/yellow] {task.description}")
+            status_color = "green" if task.status == TaskStatus.COMPLETED else "yellow"
+            console.print(f"  [green]Status:[/green] [{status_color}]{task.status.value.upper()}[/{status_color}]")
         else:
-            print(f"Task with ID {task_id} not found.")
+            console.print(f"[red]Task with ID {task_id} not found.[/red]")
     except TaskNotFoundError as e:
-        print(f"Error: {e}")
+        console.print(f"[red]Error: {e}[/red]")
 
 
 

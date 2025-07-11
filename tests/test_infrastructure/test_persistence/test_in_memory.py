@@ -12,7 +12,7 @@ def test_in_memory_task_repository_adds_task():
         id=task_id,
     )
     repository.add(task)
-    assert repository.get(task_id) == task
+    assert repository.get_by_id(task_id) == task
 
 
 def test_in_memory_task_repository_generates_unique_ids():
